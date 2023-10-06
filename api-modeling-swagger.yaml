@@ -1,0 +1,189 @@
+openapi: 3.0.0
+servers:
+  - description: SwaggerHub API Auto Mocking
+    # url to be defined
+    # url: https://virtserver.swaggerhub.com/
+info:
+  description: API do projeto AchievementTracker, um app para gerenciar metas pessoais, da disciplina DSWI6 - ADS IFSP-BRA.
+  version: "1.0.0"
+  title: achievementtracker API
+  contact:
+    email: 22266171+inatagan@users.noreply.github.com
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+tags:
+  - name: achievement
+    description: all endpoints for the "tasks" object.
+paths:
+  /achievements:
+    get:
+      summary: busca todas as metas cadastradas de um usuario.
+      tags:
+        - achievement
+      description: |
+        O usuario não precisa passar nenhuma informação. Apenas acessando este endpoint, 
+        ele obterá todos os itens cadastrados na sua conta.
+      parameters:
+        - in: query
+          name: searchString
+          description: pass an optional search string for looking up items.
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: skip
+          description: number of records to skip for pagination
+          schema:
+            type: integer
+            format: int32
+            minimum: 0
+        - in: query
+          name: limit
+          description: maximum number of records to return
+          schema:
+            type: integer
+            format: int32
+            minimum: 0
+            maximum: 50
+      responses:
+        '200':
+          description: Successful return all achievements.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Achievement'
+                example:
+                  - achievement_id:  0001
+                    description: Lorem ipsum dolor sit amet.
+                    achievement_obj: 
+                      name: Viajar para Paris
+                      description: Lorem ipsum dolor sit amet. 
+                      # imagem: https://images.unsplash.com/photo-1524820801657-fd59673fbb05?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1144&q=80
+                    beginsOn: '2023-08-29T09:12:33.001Z'
+                    endsOn: '2024-12-01T09:12:33.001Z'
+                    tasks:  
+                        item: comprar passagens
+                    tasks:  
+                        item: reservar hotel
+
+                  - achievement_id:  0002
+                    description: Lorem ipsum dolor sit amet.
+                    achievement_obj: 
+                      name: praticar frances todos os dias
+                      description: Lorem ipsum dolor sit amet. 
+                      # imagem: https://images.unsplash.com/photo-1524820801657-fd59673fbb05?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1144&q=80
+                    beginsOn: '2022-08-29T09:12:33.001Z'
+                    endsOn: '2024-12-01T09:12:33.001Z'
+                    tasks:  
+                        item: praticar aula
+                    tasks:  
+                        item: praticar fala
+          
+        '400':
+          description: bad input parameter
+    post:
+      summary: Add a new achievement.
+      tags:
+        - achievement
+      description: Lorem ipsum dolor sit amet. 
+      responses:
+        '201':
+          description: Lorem ipsum dolor sit amet. 
+        '400':
+          description: 'invalid input, object invalid'
+        '409':
+          description: already exists.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Achievement'
+        description: Lorem ipsum dolor sit amet. 
+  /achievement/{achievement_id}:
+    get:
+      summary: get achievement by ID.
+      tags:
+        - achievement
+      description: |
+        An ID parameter must be passed.
+      parameters: 
+        - in: path
+          name: achievement_id
+          description: achievement_id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: returns achievements by ID.
+          content:
+            application/json:
+              schema:
+                  $ref: '#/components/schemas/Achievements'
+        '404':
+          description: Not found.
+    delete:
+      summary: Deletes achievement by ID.
+      tags:
+        - achievement
+      description: |
+        An ID parameter must be passed.
+      parameters: 
+        - in: path
+          name: achievement_id
+          description: achievement_id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success the items was removed.
+          content:
+            application/text:
+              example: Achievement removed.
+        '404':
+          description: Not found.
+
+components:
+  schemas:
+    achievements:
+      type: object
+      required:
+        - achievement_id
+        - description
+        - achievement_obj
+        - beginsOn
+        - endsOn
+        - tasks
+      properties:
+        achievement_id:
+          type: string
+          example: 0001
+        description:
+          type: string
+          example: Lorem ipsum dolor sit amet. 
+        achievement_obj:
+          $ref: '#/components/schemas/tasks'
+        beginsOn:
+          type: string
+          format: date-time
+          example: '2023-08-29T09:12:33.001Z'
+        endsOn:
+          type: string
+          format: date-time
+          example: '2023-08-29T09:12:33.001Z'
+        tasks:
+          type: string
+          example: Lorem ipsum dolor sit amet. 
+  
+    achievement_obj:
+      properties:
+        nome:
+          type: string
+          example: Lorem ipsum dolor sit amet. 
+        description:
+          type: string
+          example: Lorem ipsum dolor sit amet. 
